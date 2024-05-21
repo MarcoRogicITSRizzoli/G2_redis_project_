@@ -4,5 +4,7 @@ r = redis.Redis(
   host='redis-18510.c55.eu-central-1-1.ec2.redns.redis-cloud.com',
   port=18510,
   db=0,
-  password='uMW0vD3w0pjQQgvafNMxJ7YUgzGgyZPo')
+  password='uMW0vD3w0pjQQgvafNMxJ7YUgzGgyZPo'
+  )
+
 r.ping()
