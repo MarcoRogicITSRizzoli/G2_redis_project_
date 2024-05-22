@@ -11,7 +11,8 @@ def main():
     db=0,
     username='bruno',
     password='User1234?',
-    decode_responses=True)
+    decode_responses=True,
+    )
     r.ping()
     
     #utilizzare match case per fare il controllo

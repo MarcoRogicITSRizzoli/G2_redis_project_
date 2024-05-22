@@ -39,7 +39,7 @@ class Utente:
         check=redis.exists(hash_key)
         
         if check==1:
-            password_encripted = redis.hget(hash_key, 'password').decode('utf-8')
+            password_encripted = redis.hget(hash_key, 'password')
             if check==1 and Utente.hash_password(password)==password_encripted:
                 os.system('cls')
                 print(f"{user_name} hai effettuato correttamente il login")
@@ -66,7 +66,7 @@ class Utente:
         
         check=redis.exists(hash_key_name)
         if check==1:
-            friend_values = [value.decode('utf-8') for value in redis.lrange(hash_key_friend, 0, -1)]
+            friend_values = [value for value in redis.lrange(hash_key_friend, 0, -1)]
             if friend_name not in friend_values:   
                 redis.rpush(f"{hash_friend}{user_name}", friend_name)
                 os.system('cls')
@@ -78,3 +78,13 @@ class Utente:
             os.system('cls')
             print(f'Utente {friend_name} non esiste')
 
+    def do_not_disturb(redis,user_name):
+        global hash_name
+        if redis.hget(f'{hash_name}{user_name}','stato') == 'False':
+            redis.hset(f'{hash_name}{user_name}','stato','True')
+            os.system('cls')
+            print('Sei in modalità non disturbare')
+        elif redis.hget(f'{hash_name}{user_name}','stato') == 'True':
+            redis.hset(f'{hash_name}{user_name}','stato','False')
+            os.system('cls')
+            print('Non sei in modalità non disturbare')
