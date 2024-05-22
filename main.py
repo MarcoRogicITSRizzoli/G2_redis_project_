@@ -2,22 +2,22 @@ import redis
 import hashlib
 import os
 
-import redis
-
 r = redis.Redis(
-  host='redis-13373.c300.eu-central-1-1.ec2.redns.redis-cloud.com',
-  port=13373,
-  db =0,
-  password='vbcod20kBBvGKDqux3rNg24FbFpmVU2K')
+  host='redis-18510.c55.eu-central-1-1.ec2.redns.redis-cloud.com',
+  port=18510,
+  db=0,
+  password='uMW0vD3w0pjQQgvafNMxJ7YUgzGgyZPo'
+  )
 r.ping
 
 user_id = 0
+hash_name = 'user:name:' 
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 def sign_up():
-    hash_name = 'user:name:'
+    global hash_name 
     user_name = str(input('Inserisci il tuo nome utente: ').strip())
     hash_key = hash_name+user_name
     check=r.exists(hash_key)
@@ -38,7 +38,7 @@ def sign_up():
         
         
 def login():
-    hash_name = 'user:name:'
+    global hash_name 
     user_name = str(input('Inserisci il tuo nome utente: ').strip())
     password = input('Inserisci la password: ').strip()
 
@@ -64,8 +64,9 @@ def login():
     
 def add_friend(user_name):
     global user_id
+    global hash_name 
+    
     hash_friend = 'user:friends:'
-    hash_name = 'user:name:'
     
     friend_name = str(input('Inserisci il nome del utente da aggiungere: ').strip())
     
@@ -101,10 +102,10 @@ def main():
                     print('-'*30)
                     print('1. Aggiungi amico')
                     print('2. Inizia una nuova chat')
-                    print('3. Visulizza chat recenti')
+                    print('3. Visulizza chat recenti')  
                     print('0. Exit')
                     print('-'*30)
-                    scelta = input('Scelta: ')
+                    scelta = input('Scelta: ').strip()
                     
                     if scelta=='1':
                         add_friend(logg)
@@ -112,9 +113,14 @@ def main():
                         ...
                     elif scelta == '2':  
                         ...
-                    elif scelta ==' 0':
+                    elif scelta =='0':
+                        os.system('cls')
                         break
+                    else:
+                        os.system('cls')
+                        print(('Scelta non valida'))
             else:
+                os.system('cls')
                 print('Errore hai inserito delle credenziali errate')
         elif scelta == '2':
             sign_up()
