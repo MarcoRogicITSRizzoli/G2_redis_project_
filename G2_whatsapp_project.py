@@ -1,7 +1,7 @@
 import redis
 from registrazione import *
 #from utente import Utente
-from messaggi import *
+#from messaggi import *
 
 def main():
     # Creare una connessione Redis
@@ -38,3 +38,6 @@ def main():
         
         else:
             print("Opzione non valida. Riprova.")
+
+if __name__ == '__main__':
+    main()
