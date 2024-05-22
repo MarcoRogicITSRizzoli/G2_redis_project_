@@ -1,5 +1,5 @@
 import redis
-from registrazione import *
+from utente import *
 #from utente import Utente
 #from messaggi import *
 
@@ -26,10 +26,10 @@ def main():
         choice = input("Inserisci il numero dell'opzione: ")
         
         if choice == '1':
-            sign_up(r)
+            Utente.sign_up(r)
         
         elif choice == '2':
-            user_name = login(r)
+            user_name = Utente.login(r)
             if user_name != None: 
                 utente_session(r, user_name)
         
