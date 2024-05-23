@@ -1,6 +1,6 @@
 import redis
 from utente import *
-#from messaggi import *
+from messaggi import *
 
 def utente_session(r, user_name):
     stato=''
@@ -36,6 +36,33 @@ def utente_session(r, user_name):
         else:
             os.system('cls')
             print("Opzione non valida. Riprova.")
+
+def active_chats(r, user_name):
+    while True:
+        chats = r.smembers(f"chats:{user_name}")
+        print("\nChat attive:")
+        for chat in chats:
+            print(chat)
+        chat_user = input("Inserisci il nome utente per continuare la chat o scrivi 'esc' per tornare al menu delle chat: ")
+        if chat_user.upper() == 'esc':
+            break
+
+def chat_session(r, from_utente, to_utente):
+    while True:
+        chat = read_messages(r, from_utente, to_utente)
+        print(f"\n>> Chat con {to_utente} <<")
+        for msg in chat:
+            print(msg)
+        
+        print("\nDigita il tuo messaggio o 'esc' per tornare al menu delle chat attive: ")
+        message = input()
+        if message.upper() == 'esc':
+            break
+        error_message = send_message(r, from_utente, to_utente, message)
+        if error_message:
+            print(error_message)
+                
+        print(error_message)
             
 def main():
     # Creare una connessione Redis
@@ -72,7 +99,6 @@ def main():
         
         else:
             print("Opzione non valida. Riprova.")
-
 
 if __name__ == '__main__':
     main()
