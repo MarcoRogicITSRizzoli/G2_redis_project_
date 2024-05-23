@@ -1,4 +1,3 @@
-import redis
 import time
 
 def send_message(r, from_user, to_user, message):

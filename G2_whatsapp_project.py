@@ -24,7 +24,7 @@ def utente_session(r, user_name):
         elif choice == '2':
             get_friends(r,user_name)
         elif choice == '3':
-            ...
+            active_chats(r, user_name)
         elif choice == '4':
             #os.system('cls')
             do_not_disturb(r,user_name)
@@ -43,8 +43,8 @@ def active_chats(r, user_name):
         print("\nChat attive:")
         for chat in chats:
             print(chat)
-        chat_user = input("Inserisci il nome utente per continuare la chat o scrivi 'esc' per tornare al menu delle chat: ")
-        if chat_user.upper() == 'esc':
+        chat_user = input("Inserisci il nome utente per continuare la chat o scrivi 'ESC' per tornare al menu delle chat: ")
+        if chat_user.upper() == 'ESC':
             break
 
 def chat_session(r, from_utente, to_utente):
@@ -54,9 +54,9 @@ def chat_session(r, from_utente, to_utente):
         for msg in chat:
             print(msg)
         
-        print("\nDigita il tuo messaggio o 'esc' per tornare al menu delle chat attive: ")
+        print("\nDigita il tuo messaggio o 'ESC' per tornare al menu delle chat attive: ")
         message = input()
-        if message.upper() == 'esc':
+        if message.upper() == 'ESC':
             break
         error_message = send_message(r, from_utente, to_utente, message)
         if error_message:
