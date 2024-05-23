@@ -74,6 +74,25 @@ def add_friend(redis,user_name):
         os.system('cls')
         print(f'Utente {friend_name} non esiste')
 
+def get_friends(redis, user_name):
+
+    hash_friend = 'user:friends:'
+    hash_key_friend = hash_friend + user_name
+
+    if redis.exists(hash_key_friend):
+        friend_values = [value.decode('utf-8') for value in redis.lrange(hash_key_friend, 0, -1)]
+        if friend_values:
+            os.system('cls')
+            print(f'Lista degli amici di {user_name}:')
+            for friend in friend_values:
+                print(friend)
+        else:
+            os.system('cls')
+            print(f'{user_name} non ha amici nella lista')
+    else:
+        os.system('cls')
+        print(f'Lista degli amici per {user_name} non esiste')
+
 def do_not_disturb(redis,user_name):
     global hash_name
     if redis.hget(f'{hash_name}{user_name}','stato') == 'False':
