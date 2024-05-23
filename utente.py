@@ -86,6 +86,7 @@ def get_friends(redis, user_name):
             print(f'Lista degli amici di {user_name}:')
             for friend in friend_values:
                 print(friend)
+            return friend_values
         else:
             os.system('cls')
             print(f'{user_name} non ha amici nella lista')

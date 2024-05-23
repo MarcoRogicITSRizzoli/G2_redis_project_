@@ -22,13 +22,11 @@ def utente_session(r, user_name):
         if choice == '1':
             add_friend(r,user_name)
         elif choice == '2':
-            get_friends(r,user_name)
+            select_contact_to_chat(r,user_name)
         elif choice == '3':
             active_chats(r, user_name)
         elif choice == '4':
-            #os.system('cls')
             do_not_disturb(r,user_name)
-            
         elif choice == '5':
             os.system('cls')
             print(f"Logout effettuato con successo. Arrivederci, {user_name}!")
@@ -36,6 +34,15 @@ def utente_session(r, user_name):
         else:
             os.system('cls')
             print("Opzione non valida. Riprova.")
+
+def select_contact_to_chat(r, user_name):
+    contatti = get_friends(r, user_name)
+    chat_utente = input("Inserisci il nome utente del contatto da chat: ")
+    if chat_utente.upper() != 'ESC':
+        if chat_utente in contatti:
+            chat_session(r, user_name, chat_utente)
+        else:
+            print("Utente non trovato.")
 
 def active_chats(r, user_name):
     while True:
@@ -46,6 +53,8 @@ def active_chats(r, user_name):
         chat_user = input("Inserisci il nome utente per continuare la chat o scrivi 'ESC' per tornare al menu delle chat: ")
         if chat_user.upper() == 'ESC':
             break
+        if chat_user in chats:
+            chat_session(r, user_name, chat_user)
 
 def chat_session(r, from_utente, to_utente):
     while True:
@@ -61,8 +70,6 @@ def chat_session(r, from_utente, to_utente):
         error_message = send_message(r, from_utente, to_utente, message)
         if error_message:
             print(error_message)
-                
-        print(error_message)
             
 def main():
     # Creare una connessione Redis
