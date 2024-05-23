@@ -1,7 +1,6 @@
 import hashlib
 import os
 
-user_id = 0
 hash_name = 'user:name:' 
 
 def hash_password(password):
@@ -52,7 +51,6 @@ def login(redis):
         return None
     
 def add_friend(redis,user_name):
-    global user_id
     global hash_name 
     
     hash_friend = 'user:friends:'
