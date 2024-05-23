@@ -75,7 +75,6 @@ def add_friend(redis,user_name):
         print(f'Utente {friend_name} non esiste')
 
 def get_friends(redis, user_name):
-    global hash_name
 
     hash_friend = 'user:friends:'
     hash_key_friend = hash_friend + user_name
