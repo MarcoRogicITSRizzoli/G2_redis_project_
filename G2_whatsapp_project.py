@@ -59,17 +59,17 @@ def active_chats(r, user_name):
 def chat_session(r, from_utente, to_utente):
     while True:
         chat = read_messages(r, from_utente, to_utente)
+        os.system('cls')
+        print("\nDigita il tuo messaggio o 'ESC' per tornare al menu delle chat attive: ")
         print(f"\n>> Chat con {to_utente} <<")
         for msg in chat:
-            print(msg)
-        
-        print("\nDigita il tuo messaggio o 'ESC' per tornare al menu delle chat attive: ")
-        message = input()
-        if message.upper() == 'ESC':
+            print(msg)       
+        # message = input()
+        # if message.upper() == 'ESC':
+        #     break
+        message=send_message(r, from_utente, to_utente)
+        if message is not None:
             break
-        error_message = send_message(r, from_utente, to_utente, message)
-        if error_message:
-            print(error_message)
             
 def main():
     # Creare una connessione Redis
