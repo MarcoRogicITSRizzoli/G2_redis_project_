@@ -18,7 +18,7 @@ def sign_up(redis):
             if password != password_valid:
                 print('Le due password sono diverse') 
             else:
-                redis.hset(f'{hash_name}{user_name}',mapping={'user_name': user_name,'password':hash_password(password),'stato':'False'})
+                redis.hset(f'{hash_name}{user_name}',mapping={'user_name': user_name,'password':hash_password(password),'stato':0})
                 os.system('cls')
                 print('Utente Registrato correttamente')
                 break
@@ -80,8 +80,8 @@ def get_friends(redis, user_name):
     hash_key_friend = hash_friend + user_name
 
     if redis.exists(hash_key_friend):
-        friend_values = [value for value in redis.smembers(hash_key_friend, 0, -1)]
-        if friend_values:
+        friend_values = [value for value in redis.smembers(hash_key_friend)]
+        if friend_values!=None:
             os.system('cls')
             print(f'Lista degli amici di {user_name}:')
             for friend in friend_values:
@@ -95,11 +95,11 @@ def get_friends(redis, user_name):
 
 def do_not_disturb(redis,user_name):
     global hash_name
-    if redis.hget(f'{hash_name}{user_name}','stato') == 'False':
-        redis.hset(f'{hash_name}{user_name}','stato','True')
+    if int(redis.hget(f'{hash_name}{user_name}','stato')) == 0:
+        redis.hset(f'{hash_name}{user_name}','stato',1)
         os.system('cls')
         print('Sei in modalità non disturbare')
-    elif redis.hget(f'{hash_name}{user_name}','stato') == 'True':
-        redis.hset(f'{hash_name}{user_name}','stato','False')
+    elif int(redis.hget(f'{hash_name}{user_name}','stato')) == 1:
+        redis.hset(f'{hash_name}{user_name}','stato',0)
         os.system('cls')
         print('Non sei in modalità non disturbare')
