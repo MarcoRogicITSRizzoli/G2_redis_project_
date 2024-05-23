@@ -13,21 +13,24 @@ def utente_session(r, user_name):
             
         print("\nSeleziona un'opzione:\n" +
             "1. Aggiungi un contatto\n" +
-            "2. Mostra rubrica\n" +
-            "3. Mostra chat iniziate\n" +
-            f"4. Modalità Do Not Disturb: {stato}\n" +
-            "5. Logout")
+            "2. Rimuovi contatto\n" +
+            "3. Mostra rubrica\n" +
+            "4. Mostra chat iniziate\n" +
+            f"5. Modalità Do Not Disturb: {stato}\n" +
+            "6. Logout")
         choice = input("Inserisci il numero dell'opzione: ")
         
         if choice == '1':
             add_friend(r,user_name)
         elif choice == '2':
-            select_contact_to_chat(r,user_name)
+            remove_friend(r,user_name)
         elif choice == '3':
-            active_chats(r, user_name)
+            select_contact_to_chat(r,user_name)
         elif choice == '4':
-            do_not_disturb(r,user_name)
+            active_chats(r, user_name)
         elif choice == '5':
+            do_not_disturb(r,user_name)
+        elif choice == '6':
             os.system('cls')
             print(f"Logout effettuato con successo. Arrivederci, {user_name}!")
             break
