@@ -26,10 +26,10 @@ def main():
         choice = input("Inserisci il numero dell'opzione: ")
         
         if choice == '1':
-            Utente.sign_up(r)
+            sign_up(r)
         
         elif choice == '2':
-            user_name = Utente.login(r)
+            user_name = login(r)
             if user_name != None: 
                 utente_session(r, user_name)
         
