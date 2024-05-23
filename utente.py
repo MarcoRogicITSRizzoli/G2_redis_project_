@@ -62,9 +62,9 @@ def add_friend(redis,user_name):
     
     check=redis.exists(hash_key_name)
     if check==1:
-        friend_values = [value for value in redis.lrange(hash_key_friend, 0, -1)]
+        friend_values = [value for value in redis.smembers(hash_key_friend)]
         if friend_name not in friend_values:   
-            redis.rpush(f"{hash_friend}{user_name}", friend_name)
+            redis.sadd(f"{hash_friend}{user_name}", friend_name)
             os.system('cls')
             print('Utente aggiunto correttamente')
         else:
@@ -80,7 +80,7 @@ def get_friends(redis, user_name):
     hash_key_friend = hash_friend + user_name
 
     if redis.exists(hash_key_friend):
-        friend_values = [value for value in redis.lrange(hash_key_friend, 0, -1)]
+        friend_values = [value for value in redis.smembers(hash_key_friend, 0, -1)]
         if friend_values:
             os.system('cls')
             print(f'Lista degli amici di {user_name}:')
