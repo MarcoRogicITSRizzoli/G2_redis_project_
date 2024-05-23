@@ -74,6 +74,25 @@ def add_friend(redis,user_name):
         os.system('cls')
         print(f'Utente {friend_name} non esiste')
 
+def remove_friend(redis, user_name):
+    hash_friend = 'user:friends:'
+    
+    friend_name = str(input('Inserisci il nome del utente da rimuovere: ').strip())
+    hash_key_friend = hash_friend + user_name
+    
+    if redis.exists(hash_key_friend):
+        friend_values = {value for value in redis.smembers(hash_key_friend)}
+        if friend_name in friend_values:
+            redis.srem(hash_key_friend, friend_name)
+            os.system('cls')
+            print(f'Utente {friend_name} rimosso correttamente')
+        else:
+            os.system('cls')
+            print(f'Utente {friend_name} non è presente nella lista amici')
+    else:
+        os.system('cls')
+        print(f'Lista degli amici per {user_name} non esiste')
+
 def get_friends(redis, user_name):
 
     hash_friend = 'user:friends:'
