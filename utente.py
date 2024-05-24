@@ -67,7 +67,7 @@ def add_friend(redis, user_name):
             matching_friends.append(friend_name)
     
     if matching_friends:
-        print("Amici trovati:")
+        print("Utenti trovati:")
         for idx, friend in enumerate(matching_friends, start=1):
             print(f"{idx}. {friend}")
         
