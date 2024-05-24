@@ -1,6 +1,6 @@
 import time
 
-def send_message(redis, from_user, to_user, message, temporary=False):
+def send_message(redis, from_user, to_user, temporary=False):
     message = input('> ')
     timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
     if int(redis.hget(f"user:name:{to_user}", "stato")) == 1:
@@ -18,7 +18,7 @@ def send_message(redis, from_user, to_user, message, temporary=False):
         redis.sadd(f"chats:{from_user}", to_user)
         redis.sadd(f"chats:{to_user}", from_user)
     
-    if temporary:
+    if temporary is True:
         redis.expire(f"messages:{from_user}:{to_user}", 60)
         redis.expire(f"messages:{to_user}:{from_user}", 60)
     
