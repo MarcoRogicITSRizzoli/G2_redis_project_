@@ -57,6 +57,8 @@ def add_friend(redis, user_name):
     hash_friend = 'user:friends:'
     hash_key_friend = hash_friend + user_name
 
+    os.system('cls')
+    
     friend_search_pattern = str(input('Inserisci il nome (o parziale) del utente da aggiungere: ').strip())
     regex_pattern = re.compile(friend_search_pattern.replace('*', '.*'), re.IGNORECASE)
     

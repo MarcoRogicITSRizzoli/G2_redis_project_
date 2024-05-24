@@ -46,11 +46,11 @@ def select_contact_to_chat(r, user_name):
             if chat_utente in contatti:
                 type_chat = input("Che tipologia di chat vuoi iniziare, normale (N) o effimera (E)?: ")
                 if type_chat.upper() == 'E':
-                    chat_session(r, user_name, chat_utente, True)
                     print("Chat effimera iniziata.")
+                    chat_session(r, user_name, chat_utente, True)
                 else:
-                    chat_session(r, user_name, chat_utente, False)
                     print("Chat iniziata.")
+                    chat_session(r, user_name, chat_utente, False)
             else:
                 print("Utente non trovato.")
     else:

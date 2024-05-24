@@ -9,9 +9,6 @@ def send_message(redis, from_user, to_user, temporary=False):
         print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA")  
     else:
         message_data = f"{timestamp}|{from_user}|{message}"
-    # last_element = redis.zrevrange(f"messages:{from_user}:{to_user}", 0, 0, withscores=True)
-    # print(last_element[0])
-    #time.time()*1000
         redis.zadd(f"messages:{from_user}:{to_user}", {message_data: time.time()})
         redis.zadd(f"messages:{to_user}:{from_user}", {message_data: time.time()})
 
