@@ -26,7 +26,7 @@ def read_messages(redis, user_id, chat_id):
         timestamp, sender, msg = message.split("|", 2)
         prefix = '>' if sender == user_id else '<'
         formatted_messaged.append(f"{prefix} {msg} [{timestamp}]")
-    #formatted_messaged.reverse()
+    formatted_messaged.reverse()
     return formatted_messaged
 
 def delete_messages(r, user_id, chat_id):

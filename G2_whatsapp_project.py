@@ -74,10 +74,10 @@ def show_chat(r,from_utente,to_utente):
     print(f"\n>> Chat con {to_utente} <<")
     print('-'*30)
     chat = read_messages(r, from_utente, to_utente)
-    for msg in chat:
-        print(msg)
     if int(r.hget(f"user:name:{to_utente}", "stato")) == 1:
         print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA") 
+    for msg in chat:
+        print(msg)
     print('-'*30)
     
 def chat_session(r, from_utente, to_utente, temporary:bool):
