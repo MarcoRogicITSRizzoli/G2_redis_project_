@@ -63,7 +63,7 @@ def active_chats(r, user_name):
         for chat in chats:
             print(chat)
         chat_user = input("Inserisci il nome utente per continuare la chat o scrivi 'ESC' per tornare al menu delle chat: ")
-        if chat_user.upper() == 'ESC':
+        if chat_user.upper() == 'ESC':  
             break
         if chat_user in chats:
             chat_session(r, user_name, chat_user)
@@ -85,7 +85,7 @@ def chat_session(r, from_utente, to_utente, temporary:bool):
         message = send_message(r, from_utente, to_utente, temporary)
         if message is not None:
             break
-        show_chat(r,from_utente,to_utente)
+        show_chat(r,from_utente,to_utente)       
 def main():
     # Creare una connessione Redis
     r = redis.Redis(

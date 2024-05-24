@@ -18,7 +18,7 @@ def send_message(redis, from_user, to_user, temporary=False):
         redis.sadd(f"chats:{from_user}", to_user)
         redis.sadd(f"chats:{to_user}", from_user)
     
-    if temporary:
+    if temporary is True:
         redis.expire(f"messages:{from_user}:{to_user}", 60)
         redis.expire(f"messages:{to_user}:{from_user}", 60)
     
