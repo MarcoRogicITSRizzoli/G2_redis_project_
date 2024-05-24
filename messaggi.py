@@ -1,6 +1,6 @@
 import time
 
-def send_message(redis, from_user, to_user, message, temporary=False):
+def send_message(redis, from_user, to_user, temporary=False):
     message = input('> ')
     timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
     if int(redis.hget(f"user:name:{to_user}", "stato")) == 1:
