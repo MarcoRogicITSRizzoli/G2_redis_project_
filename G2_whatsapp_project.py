@@ -66,7 +66,7 @@ def active_chats(r, user_name):
         if chat_user.upper() == 'ESC':  
             break
         if chat_user in chats:
-            chat_session(r, user_name, chat_user)
+            chat_session(r, user_name, chat_user,False)
 
 def show_chat(r,from_utente,to_utente):
     os.system('cls')
@@ -75,7 +75,9 @@ def show_chat(r,from_utente,to_utente):
     print('-'*30)
     chat = read_messages(r, from_utente, to_utente)
     for msg in chat:
-        print(msg)  
+        print(msg)
+    if int(r.hget(f"user:name:{to_utente}", "stato")) == 1:
+        print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA") 
     print('-'*30)
     
 def chat_session(r, from_utente, to_utente, temporary:bool):
