@@ -40,12 +40,23 @@ def utente_session(r, user_name):
 
 def select_contact_to_chat(r, user_name):
     contatti = get_friends(r, user_name)
-    chat_utente = input("Inserisci il nome utente del contatto da chat: ")
-    if chat_utente.upper() != 'ESC':
+    if contatti:
+        print("\nRubrica:")
+        for contatto in contatti:
+            print(contatto)
+        chat_utente = input("Inserisci il nome utente del contatto da chat: ")
         if chat_utente in contatti:
-            chat_session(r, user_name, chat_utente)
+            type_chat = input("Che tipologia di chat vuoi iniziare, normale (N) o effimera (E)?: ")
+            if type_chat.upper() == 'E':
+                chat_session(r, user_name, chat_utente, temporary=True)
+                print("Chat effimera iniziata.")
+            else:
+                chat_session(r, user_name, chat_utente)
+                print("Chat iniziata.")
         else:
             print("Utente non trovato.")
+    else:
+        print("Non hai contatti in rubrica.")
 
 def active_chats(r, user_name):
     while True:
