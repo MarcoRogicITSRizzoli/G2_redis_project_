@@ -1,5 +1,6 @@
 import hashlib
 import os
+import re
 
 hash_name = 'user:name:' 
 
@@ -49,30 +50,46 @@ def login(redis):
         os.system('cls')
         print('Dati non inseriti correttamente')
         return None
-    
-def add_friend(redis,user_name):
-    global hash_name 
+
+def add_friend(redis, user_name):
+    global hash_name
     
     hash_friend = 'user:friends:'
+    hash_key_friend = hash_friend + user_name
+
+    friend_search_pattern = str(input('Inserisci il nome (o parziale) del utente da aggiungere: ').strip())
+    regex_pattern = re.compile(friend_search_pattern.replace('*', '.*'), re.IGNORECASE)
     
-    friend_name = str(input('Inserisci il nome del utente da aggiungere: ').strip())
+    matching_friends = []
+    for key in redis.scan_iter(f'{hash_name}*'):
+        friend_name = key.replace(hash_name, '')
+        if regex_pattern.match(friend_name):
+            matching_friends.append(friend_name)
     
-    hash_key_friend = hash_friend+user_name
-    hash_key_name= hash_name+friend_name
-    
-    check=redis.exists(hash_key_name)
-    if check==1:
-        friend_values = [value for value in redis.smembers(hash_key_friend)]
-        if friend_name not in friend_values:   
-            redis.sadd(f"{hash_friend}{user_name}", friend_name)
-            os.system('cls')
-            print('Utente aggiunto correttamente')
-        else:
-            os.system('cls')
-            print('Utente non aggiunto correttamente')
+    if matching_friends:
+        print("Amici trovati:")
+        for idx, friend in enumerate(matching_friends, start=1):
+            print(f"{idx}. {friend}")
+        
+        try:
+            selezione = int(input('Seleziona un numero per aggiungere un amico: ').strip())
+            if 1 <= selezione <= len(matching_friends):
+                selected_friend = matching_friends[selezione - 1]
+                if not redis.sismember(hash_key_friend, selected_friend):
+                    redis.sadd(hash_key_friend, selected_friend)
+                    os.system('cls')
+                    print(f'Utente {selected_friend} aggiunto correttamente')
+                else:
+                    os.system('cls')
+                    print('Utente già presente nella lista amici')
+            else:
+                print('Selezione non valida')
+        except ValueError:
+            print('Inserisci un numero valido')
     else:
         os.system('cls')
-        print(f'Utente {friend_name} non esiste')
+        print('Nessun amico trovato con quel criterio di ricerca')
+
 
 def remove_friend(redis, user_name):
     hash_friend = 'user:friends:'
@@ -91,7 +108,7 @@ def remove_friend(redis, user_name):
             print(f'Utente {friend_name} non è presente nella lista amici')
     else:
         os.system('cls')
-        print(f'Lista degli amici per {user_name} non esiste')
+        print(f'Utente {friend_name} non è presente nella lista amici')
 
 def get_friends(redis, user_name):
 
