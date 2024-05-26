@@ -1,6 +1,7 @@
 import redis
 from utente import *
 from messaggi import *
+from animazione import *
 
 def utente_session(r, user_name):
     while True:
@@ -26,7 +27,8 @@ def utente_session(r, user_name):
                 do_not_disturb(r,user_name)
             case '6':
                 os.system('cls')
-                print(f"Logout effettuato con successo. Arrivederci, {user_name}!")
+                strlog = f"Logout effettuato con successo. Arrivederci, {user_name}!"
+                logout(strlog, user_name)
                 break
             case _:
                 os.system('cls')
