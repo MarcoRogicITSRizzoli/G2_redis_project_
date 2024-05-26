@@ -14,6 +14,8 @@ def send_message(redis, from_user, to_user, temporary=False):
 
         redis.sadd(f"chats:{from_user}", to_user)
         redis.sadd(f"chats:{to_user}", from_user)
+        
+        redis.publish(f"channel:{to_user}", message_data)
     
     if temporary is True:
         redis.expire(f"messages:{from_user}:{to_user}", 60)
@@ -33,3 +35,10 @@ def delete_messages(r, user_id, chat_id):
     r.delete(f"messages:{chat_id}:{user_id}")
     r.srem(f"chats:{user_id}", chat_id)
     r.srem(f"chats:{chat_id}", user_id)
+
+def subscribe_message(redis, user_id):
+    pubsub = redis.pubsub()
+    pubsub.subscribe(f"channel:{user_id}")
+    for message in pubsub.listen():
+        if message['type'] == 'message':
+            print(f"\nNew message: {message['data']}\n")

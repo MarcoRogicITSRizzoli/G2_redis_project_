@@ -1,4 +1,5 @@
 import redis
+import threading
 from utente import *
 from messaggi import *
 from animazione import *
@@ -35,7 +36,7 @@ def utente_session(r, user_name):
                 print("Opzione non valida. Riprova.")
 
 def get_status(r,user_name):
-    if int(r.hget(f'{hash_name}{user_name}','stato'))==0:
+    if int(r.hget(f'{hash_name}{user_name}','stato')) == 0:
         return 'False'
     else:
         return 'True'
@@ -87,7 +88,7 @@ def show_chat(r,from_utente,to_utente):
     
 def chat_session(r, from_utente, to_utente, temporary:bool):
     os.system('cls')
-    #show_chat(r,from_utente,to_utente)
+    threading.Thread(target=subscribe_message, args=(redis, from_utente)).start()
     while True:
         show_chat(r,from_utente,to_utente) 
         message = send_message(r, from_utente, to_utente, temporary)
