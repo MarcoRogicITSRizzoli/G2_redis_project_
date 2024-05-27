@@ -41,21 +41,32 @@ def get_status(r,user_name):
     else:
         return 'True'
     
-def select_contact_to_chat(r, user_name):
-    contatti = get_friends(r, user_name)
+def select_contact_to_chat(redis, user_name):
+    contatti = get_friends(redis, user_name) 
     if contatti:
-        chat_utente = input("Inserisci il nome utente del contatto da chat: ")
-        if chat_utente.upper() != 'ESC':
-            if chat_utente in contatti:
-                type_chat = input("Che tipologia di chat vuoi iniziare, normale (N) o effimera (E)?: ")
-                if type_chat.upper() == 'E':
+        print("Utenti trovati:")
+        for idx, contatto in enumerate(contatti, start=1):
+            print(f"{idx}. {contatto}")
+        try:
+            chat_utente_idx = input("Seleziona un numero per il nome utente del contatto da chat (o digita 'ESC' per uscire): ").strip()
+            if chat_utente_idx.upper() == 'ESC':
+                print("Operazione annullata.")
+                return
+
+            chat_utente_idx = int(chat_utente_idx)
+            if 1 <= chat_utente_idx <= len(contatti):
+                selected_user = contatti[chat_utente_idx - 1]
+                type_chat = input("Che tipologia di chat vuoi iniziare, normale (N) o effimera (E)?: ").strip().upper()
+                if type_chat == 'E':
                     print("Chat effimera iniziata.")
-                    chat_session(r, user_name, chat_utente, True)
+                    chat_session(redis, user_name, selected_user, True)
                 else:
                     print("Chat iniziata.")
-                    chat_session(r, user_name, chat_utente, False)
+                    chat_session(redis, user_name, selected_user, False)
             else:
-                print("Utente non trovato.")
+                print("Numero selezionato non valido.")
+        except ValueError:
+            print('Inserisci un numero valido.')
     else:
         print("Non hai contatti in rubrica.")
 
