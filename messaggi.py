@@ -22,11 +22,11 @@ def send_message(redis, from_user, to_user, temporary=False):
         redis.expire(f"messages:{to_user}:{from_user}", 60)
     
 def read_messages(redis, user_id, chat_id):
-    messages = redis.zrevrange(f"messages:{user_id}:{chat_id}", 0, -1)
+    messages = redis.zrange(f"messages:{user_id}:{chat_id}", 0, -1)
     formatted_messaged = []
     for message in messages:
         timestamp, sender, msg = message.split("|", 2)
-        prefix = '>' if sender == user_id else '<'
+        prefix = f'{'\t'*5} >' if sender == user_id else '<'
         formatted_messaged.append(f"{prefix} {msg} [{timestamp}]")
     return formatted_messaged
 
@@ -41,4 +41,5 @@ def subscribe_message(redis, user_id):
     pubsub.subscribe(f"channel:{user_id}")
     for message in pubsub.listen():
         if message['type'] == 'message':
-            print(f"\nNew message: {message['data']}\n")
+            print(f"< {message['data']}\n"+
+                   '-'*30)

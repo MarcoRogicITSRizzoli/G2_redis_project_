@@ -86,7 +86,7 @@ def add_friend(redis, user_name):
                     print('Utente già presente nella lista amici')
             else:
                 print('Selezione non valida')
-        except ValueError:
+        except TypeError:
             print('Inserisci un numero valido')
     else:
         os.system('cls')

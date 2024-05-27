@@ -83,12 +83,12 @@ def show_chat(r,from_utente,to_utente):
     if int(r.hget(f"user:name:{to_utente}", "stato")) == 1:
         print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA") 
     for msg in chat:
-        print(msg)
-    print('-'*30)
+        print(msg+'\t')
+    #print('-'*30)
     
 def chat_session(r, from_utente, to_utente, temporary:bool):
     os.system('cls')
-    threading.Thread(target=subscribe_message, args=(redis, from_utente)).start()
+    threading.Thread(target=subscribe_message, args=(r, from_utente)).start()
     while True:
         show_chat(r,from_utente,to_utente) 
         message = send_message(r, from_utente, to_utente, temporary)
@@ -128,6 +128,7 @@ def main():
                 print("Grazie per aver utilizzato il sistema di messaggistica. Arrivederci!")
                 break
             case _:
+                os.system('cls')
                 print("Opzione non valida. Riprova.")
 
 if __name__ == '__main__':
