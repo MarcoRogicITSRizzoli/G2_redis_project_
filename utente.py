@@ -123,7 +123,7 @@ def get_friends(redis, user_name):
             os.system('cls')
             print(f'Lista degli amici di {user_name}:')
             for friend in friend_values:
-                print(friend)
+                friend = friend
             return friend_values
         else:
             os.system('cls')
