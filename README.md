@@ -127,8 +127,8 @@ modificando le informazioni presenti nel modulo G2_whatsapp_project
 - [x] *Chat tra utenti con invio dei messaggi
   - [x] *Possibilità di creare una chat effimera della durata di 1 minuto
   - [x] *Chat con invio dei messaggi live
-[ ] *Creazione di un launcher per l'app
-[ ] *Supporto per l'invio di Media nelle chat
+- [ ] *Creazione di un launcher per l'app
+- [ ] *Supporto per l'invio di Media nelle chat
 
 
 <p align="right">(<a href="#readme-top">torna in cima</a>)</p>
