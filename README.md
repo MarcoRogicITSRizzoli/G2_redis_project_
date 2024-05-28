@@ -7,7 +7,7 @@
     <li>
       <a href="#about-the-project">Il Progetto</a>
       <ul>
-        <li><a href="#built-with">Librerie</a></li>
+        <li><a href="#librerie">Librerie</a></li>
       </ul>
     </li>
     <li>
