@@ -78,7 +78,8 @@ def add_friend(redis, user_name):
     if matching_friends:
         print("Utenti trovati:")
         for idx, friend in enumerate(matching_friends, start=1):
-            print(f"{idx}. {friend}")
+            a = f"{idx}. {friend}\n"
+            anim(a)
         
         try:
             selezione = int(input('Seleziona un numero per aggiungere un amico: ').strip())
