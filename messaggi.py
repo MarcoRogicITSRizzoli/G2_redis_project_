@@ -1,32 +1,37 @@
 import time
+from animazione import *
+from utente import *
+import threading
 
-def send_message(redis, from_user, to_user, temporary=False):
-    message = input('> ')
+def send_message(r, from_user, to_user, temporary=False):
+         
+    message = input(f'\n{Fore.CYAN} > {Style.RESET_ALL}')
     timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
     if message.upper()=='ESC': 
         return message
-    elif int(redis.hget(f"user:name:{to_user}", "stato")) == 1:
+    elif int(r.hget(f"user:name:{to_user}", "stato")) == 1:
         print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA")  
+        return None
     else:
         message_data = f"{timestamp}|{from_user}|{message}"
-        redis.zadd(f"messages:{from_user}:{to_user}", {message_data: time.time()})
-        redis.zadd(f"messages:{to_user}:{from_user}", {message_data: time.time()})
+        r.zadd(f"messages:{from_user}:{to_user}", {message_data: time.time()})
+        r.zadd(f"messages:{to_user}:{from_user}", {message_data: time.time()})
 
-        redis.sadd(f"chats:{from_user}", to_user)
-        redis.sadd(f"chats:{to_user}", from_user)
+        r.sadd(f"chats:{from_user}", to_user)
+        r.sadd(f"chats:{to_user}", from_user)
         
-        redis.publish(f"channel:{to_user}", message_data)
+        r.publish(f"channel:{to_user}", message_data)
     
     if temporary is True:
-        redis.expire(f"messages:{from_user}:{to_user}", 60)
-        redis.expire(f"messages:{to_user}:{from_user}", 60)
+        r.expire(f"messages:{from_user}:{to_user}", 60)
+        r.expire(f"messages:{to_user}:{from_user}", 60)
     
-def read_messages(redis, user_id, chat_id):
-    messages = redis.zrange(f"messages:{user_id}:{chat_id}", 0, -1)
+def read_messages(r, user_id, chat_id):
+    messages = r.zrange(f"messages:{user_id}:{chat_id}", 0, -1)
     formatted_messaged = []
     for message in messages:
         timestamp, sender, msg = message.split("|", 2)
-        prefix = f'{'\t'*5} >' if sender == user_id else '<'
+        prefix = (f'{Fore.CYAN} > {Style.RESET_ALL}') if sender == user_id else (f'{Fore.RED} < {Style.RESET_ALL}')
         formatted_messaged.append(f"{prefix} {msg} [{timestamp}]")
     return formatted_messaged
 
@@ -36,10 +41,98 @@ def delete_messages(r, user_id, chat_id):
     r.srem(f"chats:{user_id}", chat_id)
     r.srem(f"chats:{chat_id}", user_id)
 
-def subscribe_message(redis, user_id):
-    pubsub = redis.pubsub()
-    pubsub.subscribe(f"channel:{user_id}")
+
+def get_status(r,user_name):
+    if int(r.hget(f'{hash_name}{user_name}','stato')) == 0:
+        return 'False'
+    else:
+        return 'True'
+    
+def select_contact_to_chat(r, user_name):
+    contatti = get_friends(r, user_name) 
+    if contatti:
+        print("Utenti trovati:")
+        for idx, contatto in enumerate(contatti, start=1):
+            print(f"{idx}. {contatto}")
+        try:
+            chat_utente_idx = input("Seleziona un numero per il nome utente del contatto da chat (o digita 'ESC' per uscire): ").strip()
+            if chat_utente_idx.upper() == 'ESC':
+                clear_screen()
+                print("Operazione annullata.")
+                return
+
+            chat_utente_idx = int(chat_utente_idx)
+            if 1 <= chat_utente_idx <= len(contatti):
+                selected_user = contatti[chat_utente_idx - 1]
+                type_chat = input("Che tipologia di chat vuoi iniziare, normale (N) o effimera (E)?: ").strip().upper()
+                if type_chat == 'E':
+                    clear_screen()
+                    print("Chat effimera iniziata.")
+                    chat_session(r, user_name, selected_user, True)
+                else:
+                    clear_screen()
+                    print("Chat iniziata.")
+                    chat_session(r, user_name, selected_user, False)
+            else:
+                print("Numero selezionato non valido.")
+        except ValueError:
+            print('Inserisci un numero valido.')
+    else:
+        print("Non hai contatti in rubrica.")
+
+def active_chats(r, user_name):
+    while True:
+        chats = r.smembers(f"chats:{user_name}")
+        if chats:
+            clear_screen()
+            print(f"\n {Fore.YELLOW}>> chat attive <<{Style.RESET_ALL}\n"+
+                '-'*60)
+            for chat in chats:
+                print(chat)
+            print('-'*60)    
+            chat_user = input("Inserisci il nome utente per continuare la chat o \nscrivi 'ESC' per tornare al menu delle chat: ")
+            if chat_user.upper() == 'ESC':  
+                clear_screen()
+                break
+            if chat_user in chats:
+                chat_session(r, user_name, chat_user,False)
+        else:
+            clear_screen()
+            print(f"\n {Fore.YELLOW} Non hai chat attive {Style.RESET_ALL}")
+            break
+
+def show_chat(r,from_user,to_user):
+    clear_screen()
+    print("\nDigita il tuo messaggio o 'ESC' per tornare al menu delle chat attive: \n"+
+         f"\n {Fore.YELLOW} >> Chat con {to_user} << {Style.RESET_ALL} \n"+
+         '-'*60)
+    chat = read_messages(r, from_user, to_user)
+    
+    for msg in chat:
+        print('\n'+msg)
+    if int(r.hget(f"user:name:{to_user}", "stato")) == 1:
+        print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA") 
+    print('-'*60) 
+       
+def chat_session(r, from_user, to_user, temporary:bool):
+    clear_screen()
+    threading.Thread(target=subscribe_message, args=(r, from_user,to_user)).start() 
+    show_chat(r,from_user,to_user)    
+    while True: 
+
+        message = send_message(r, from_user, to_user, temporary)
+        if message is not None:
+            break
+        else:
+            show_chat(r,from_user,to_user)
+        
+def subscribe_message(r, from_user,to_user):
+    pubsub = r.pubsub()
+    pubsub.subscribe(f"channel:{from_user}")
+    print(pubsub.listen())
     for message in pubsub.listen():
         if message['type'] == 'message':
-            print(f"< {message['data']}\n"+
-                   '-'*30)
+            print(f"{Fore.RED} < {Style.RESET_ALL} {message['data'].split('|',2)[2]} [{message['data'].split('|',1)[0]}] (Nuovo messaggio)")
+            #show_chat(r,from_user,to_user) 
+
+            
