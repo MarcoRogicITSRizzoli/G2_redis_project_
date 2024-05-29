@@ -5,14 +5,15 @@ from animazione import *
 
 def utente_session(r, user_name):
     while True:
-        print("\nSeleziona un'opzione:\n" +
+        sel = ("\nSeleziona un'opzione:\n" +
             "1. Aggiungi un contatto\n" +
             "2. Rimuovi contatto\n" +
             "3. Mostra rubrica\n" +
             "4. Mostra chat iniziate\n" +
             f"5. Modalità Do Not Disturb: {get_status(r,user_name)}\n" +
-            "6. Logout")
-           
+            "6. Logout\n")
+        anim(sel)
+
         try:
             choice = int(input("Inserisci il numero dell'opzione: "))
             match choice:
@@ -29,7 +30,7 @@ def utente_session(r, user_name):
                 case 6:
                     clear_screen()
                     strlog = f"Logout effettuato con successo. Arrivederci, {user_name}!"
-                    logout(strlog)
+                    anim(strlog)
                     break
                 case _:
                     clear_screen()
@@ -50,12 +51,14 @@ def main():
     decode_responses=True,
     )
     r.ping()
-    print("Benvenuto nel sistema di messaggistica!")
+    a = ("\nBenvenuto nel sistema di messaggistica!")
+    anim(a)
     while True:
-        print("\nSeleziona un'opzione:\n"+
+        sel = ("\nSeleziona un'opzione:\n"+
               "1. Registrati\n"+
               "2. Login\n"+
               "3. Esci\n")
+        anim(sel)
        
         try:
             choice = int(input("Inserisci il numero dell'opzione: "))
@@ -67,7 +70,8 @@ def main():
                     if user_name != None: 
                         utente_session(r, user_name)
                 case 3:
-                    print("Grazie per aver utilizzato il sistema di messaggistica. Arrivederci!")
+                    strlog = "Grazie per aver utilizzato il sistema di messaggistica. Arrivederci!"
+                    anim(strlog)
                     break
                 case _:
                     clear_screen()

@@ -53,7 +53,8 @@ def select_contact_to_chat(r, user_name):
     if contatti:
         print("Utenti trovati:")
         for idx, contatto in enumerate(contatti, start=1):
-            print(f"{idx}. {contatto}")
+            a = f"{idx}. {contatto}\n"
+            anim(a)
         try:
             chat_utente_idx = input("Seleziona un numero per il nome utente del contatto da chat (o digita 'ESC' per uscire): ").strip()
             if chat_utente_idx.upper() == 'ESC':
