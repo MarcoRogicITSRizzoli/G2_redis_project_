@@ -76,5 +76,7 @@ def main():
         except ValueError:
             clear_screen()
             print('Errore hai inserito un opzione inesistente')
+            
+    #r.incr(f"messages:{from_user}:{to_user}")
 if __name__ == '__main__':
     main()

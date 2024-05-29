@@ -2,6 +2,7 @@ import time
 from animazione import *
 from utente import *
 import threading
+import redis
 
 def send_message(r, from_user, to_user, temporary=False):
          
@@ -101,38 +102,64 @@ def active_chats(r, user_name):
             print(f"\n {Fore.YELLOW} Non hai chat attive {Style.RESET_ALL}")
             break
 
-def show_chat(r,from_user,to_user):
+def show_chat(r, from_user, to_user, notification: bool):
     clear_screen()
-    print("\nDigita il tuo messaggio o 'ESC' per tornare al menu delle chat attive: \n"+
-         f"\n {Fore.YELLOW} >> Chat con {to_user} << {Style.RESET_ALL} \n"+
-         '-'*60)
-    chat = read_messages(r, from_user, to_user)
+    print("\nDigita il tuo messaggio o 'ESC' per tornare al menu delle chat attive: \n" +
+          f"\n {Fore.YELLOW} >> Chat con {to_user} << {Style.RESET_ALL} \n" +
+          '-' * 60)
     
-    for msg in chat:
-        print('\n'+msg)
+    chat = read_messages(r, from_user, to_user)
+    # notification_numer = r.smembers(f"notification:{from_user}")
+    # conut_numer = 0
+    # for noti in notification_numer:
+    #     date,to_user_to,mess = noti.split('|',2)
+    #     if to_user_to == to_user:
+    #         conut_numer =+1
+    for i, msg in enumerate(chat):
+        if notification and i == len(chat) - 1:
+            print('\n' + msg + " (nuovo messaggio)")
+        else:
+            print('\n' + msg)
+    
     if int(r.hget(f"user:name:{to_user}", "stato")) == 1:
-        print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA") 
-    print('-'*60) 
-       
+        print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA")
+    
+    print('-' * 60)
+
 def chat_session(r, from_user, to_user, temporary:bool):
     clear_screen()
-    threading.Thread(target=subscribe_message, args=(r, from_user,to_user)).start() 
-    show_chat(r,from_user,to_user)    
+    subscribe_message(r, from_user,to_user)
+    show_chat(r,from_user,to_user,False)    
+    
     while True: 
 
         message = send_message(r, from_user, to_user, temporary)
         if message is not None:
             break
         else:
-            show_chat(r,from_user,to_user)
-        
+            show_chat(r,from_user,to_user,False)
+ 
+
+
+def callback_notification(message):
+    r = redis.Redis(
+    host='redis-18510.c55.eu-central-1-1.ec2.redns.redis-cloud.com',
+    port=18510,
+    db=0,
+    username='bruno',
+    password='User1234?',
+    decode_responses=True,
+    )
+    from_user = message['channel'].split(':')[1]
+    date,to_user,mess = message['data'].split('|',2)
+    r.zadd(f"notification:{from_user}", {f"{date}|{to_user}|{mess}": time.time()})
+    #print(f"{Fore.RED} < {Style.RESET_ALL} {mess} [{date}] (Nuovo messaggio)")
+         
 def subscribe_message(r, from_user,to_user):
     pubsub = r.pubsub()
-    pubsub.subscribe(f"channel:{from_user}")
-    
-    for message in pubsub.listen():
-        if message['type'] == 'message':
-            #print(f"{Fore.RED} < {Style.RESET_ALL} {message['data'].split('|',2)[2]} [{message['data'].split('|',1)[0]}] (Nuovo messaggio)")
-            show_chat(r,from_user,to_user) 
+    pubsub.psubscribe(**{f"channel:{from_user}": callback_notification})
+    pubsub.psubscribe(**{f"channel:{to_user}": callback_notification})
+    r.publish("utenti:registrazioni", from_user)
+    pubsub.run_in_thread(sleep_time=0.01)
 
             
