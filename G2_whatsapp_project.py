@@ -12,28 +12,33 @@ def utente_session(r, user_name):
             "4. Mostra chat iniziate\n" +
             f"5. Modalità Do Not Disturb: {get_status(r,user_name)}\n" +
             "6. Logout")
-        choice = int(input("Inserisci il numero dell'opzione: "))
-        
-        match choice:
-            case 1:
-                add_friend(r,user_name)
-            case 2:
-                remove_friend(r,user_name)
-            case 3:
-                select_contact_to_chat(r,user_name)
-            case 4:
-                active_chats(r, user_name)   
-            case 5:
-                do_not_disturb(r,user_name)
-            case 6:
-                clear_screen()
-                strlog = f"Logout effettuato con successo. Arrivederci, {user_name}!"
-                logout(strlog)
-                break
-            case _:
-                clear_screen()
-                print("Opzione non valida. Riprova.")
-              
+           
+        try:
+            choice = int(input("Inserisci il numero dell'opzione: "))
+            match choice:
+                case 1:
+                    add_friend(r,user_name)
+                case 2:
+                    remove_friend(r,user_name)
+                case 3:
+                    select_contact_to_chat(r,user_name)
+                case 4:
+                    active_chats(r, user_name)   
+                case 5:
+                    do_not_disturb(r,user_name)
+                case 6:
+                    clear_screen()
+                    strlog = f"Logout effettuato con successo. Arrivederci, {user_name}!"
+                    logout(strlog)
+                    break
+                case _:
+                    clear_screen()
+                    print("Opzione non valida. Riprova.")
+                    raise ValueError
+        except ValueError:
+            clear_screen()
+            print('Errore hai inserito un opzione inesistente')
+            
 def main():
     # Creare una connessione Redis
     r = redis.Redis(
@@ -51,21 +56,25 @@ def main():
               "1. Registrati\n"+
               "2. Login\n"+
               "3. Esci\n")
-        choice = int(input("Inserisci il numero dell'opzione: "))
-        
-        match choice:
-            case 1:
-                sign_up(r)  
-            case 2:
-                user_name = login(r)
-                if user_name != None: 
-                    utente_session(r, user_name)
-            case 3:
-                print("Grazie per aver utilizzato il sistema di messaggistica. Arrivederci!")
-                break
-            case _:
-                clear_screen()
-                print("Opzione non valida. Riprova.")
-
+       
+        try:
+            choice = int(input("Inserisci il numero dell'opzione: "))
+            match choice:
+                case 1:
+                    sign_up(r)  
+                case 2:
+                    user_name = login(r)
+                    if user_name != None: 
+                        utente_session(r, user_name)
+                case 3:
+                    print("Grazie per aver utilizzato il sistema di messaggistica. Arrivederci!")
+                    break
+                case _:
+                    clear_screen()
+                    print("Opzione non valida. Riprova.")
+                    raise ValueError
+        except ValueError:
+            clear_screen()
+            print('Errore hai inserito un opzione inesistente')
 if __name__ == '__main__':
     main()

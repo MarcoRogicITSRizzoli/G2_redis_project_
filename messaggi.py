@@ -129,10 +129,10 @@ def chat_session(r, from_user, to_user, temporary:bool):
 def subscribe_message(r, from_user,to_user):
     pubsub = r.pubsub()
     pubsub.subscribe(f"channel:{from_user}")
-    print(pubsub.listen())
+    
     for message in pubsub.listen():
         if message['type'] == 'message':
-            print(f"{Fore.RED} < {Style.RESET_ALL} {message['data'].split('|',2)[2]} [{message['data'].split('|',1)[0]}] (Nuovo messaggio)")
-            #show_chat(r,from_user,to_user) 
+            #print(f"{Fore.RED} < {Style.RESET_ALL} {message['data'].split('|',2)[2]} [{message['data'].split('|',1)[0]}] (Nuovo messaggio)")
+            show_chat(r,from_user,to_user) 
 
             
