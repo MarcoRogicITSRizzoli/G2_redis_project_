@@ -5,19 +5,19 @@
   <summary>Indice</summary>
   <ol>
     <li>
-      <a href="#about-the-project">Il Progetto</a>
+      <a href="#il-progetto">Il Progetto</a>
       <ul>
         <li><a href="#librerie">Librerie</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Come iniziare</a>
+      <a href="#come-iniziare">Come iniziare</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisiti</a></li>
-        <li><a href="#installation">Installazioni</a></li>
+        <li><a href="#prerequisiti">Prerequisiti</a></li>
+        <li><a href="#installazioni">Installazioni</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Esempio di utilizzo</a></li>
+    <li><a href="#esempio-di-utilizzo">Esempio di utilizzo</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#fonti">Fonti</a></li>
   </ol>
