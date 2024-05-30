@@ -6,7 +6,7 @@ import os
 def anim(strlog):
     for x in range(len(strlog)):
         print(strlog[x], end='', flush=True)
-        time.sleep(0.00)
+        time.sleep(0.002)
         
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
