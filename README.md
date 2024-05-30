@@ -15,9 +15,9 @@
       <ul>
         <li><a href="#prerequisiti">Prerequisiti</a></li>
         <li><a href="#installazioni">Installazioni</a></li>
+        <li><a href="#avvio-del-software">Avvio del software</a></li>
       </ul>
     </li>
-    <li><a href="#esempio-di-utilizzo">Esempio di utilizzo</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#fonti">Fonti</a></li>
   </ol>
@@ -38,7 +38,7 @@ L'applicazione consente agli utenti di effettuare le seguenti azioni:
 Al fine di permetterci lo sviluppo di alcune funzionalità e per delle migliorie a livello grafico abbiamo effettuato delle modifiche rispetto al progetto originale:
 1. Oltre al prefisso < per il sender ed il > per il receiver, abbiamo usato il colore rosso per il primo e l'azzurro per il secondo poiché solo il prefisso rendeva confusionaria la visualizzazione
 2. Le chat, contrariamente a quanto richiesto, abbiamo preferito una visualizzazione dei messaggi più recenti in fondo poiché più conforme ad un software di messaggistica come whatsapp 
-3. Abbiamo utilizzato pubsub per la creazione di un canale di comunicazione tra utente1 ed utente2 ed abbiamo aggiunto la librearia threading per permettere la concorrenza dei messaggi e rendere la chat in tempo reale tra gli utenti
+3. Con il comando pubsub abbiamo creato un canale di comunicazione tra due utenti in modo che essa sia in tempo reale e l'inserimento delle notifiche durante la chat 
 
 <p align="right">(<a href="#readme-top">torna in cima</a>)</p>
 
@@ -98,9 +98,9 @@ modificando le informazioni presenti nel modulo G2_whatsapp_project
 
 
 
-## Esempio di utilizzo
+### Avvio del software
 
-*Descrizione per l'utilizzo + Screenshots del software in funzione
+Il modulo G2_whatsapp_project funge da contenitore del main per il lancio del software ma è possibile avviarlo direttamente da terminale
 
 1. Avvio del software da terminale
     Comando per Windows
