@@ -42,6 +42,9 @@ def delete_messages(r, user_id, chat_id):
     r.srem(f"chats:{user_id}", chat_id)
     r.srem(f"chats:{chat_id}", user_id)
 
+def delete_notification(r, from_user, chat_id):
+    r.delete(f"notification:{from_user}:{chat_id}")
+
 
 def get_status(r,user_name):
     if int(r.hget(f'{hash_name}{user_name}','stato')) == 0:
@@ -103,6 +106,10 @@ def active_chats(r, user_name):
             print(f"\n {Fore.YELLOW} Non hai chat attive {Style.RESET_ALL}")
             break
 
+def notification_number(r, from_user, to_user):
+    keys =  r.zrange(f"notification:{from_user}:{to_user}", 0, -1)
+    return len(keys)
+    
 def show_chat(r, from_user, to_user, notification: bool):
     clear_screen()
     print("\nDigita il tuo messaggio o 'ESC' per tornare al menu delle chat attive: \n" +
@@ -110,28 +117,24 @@ def show_chat(r, from_user, to_user, notification: bool):
           '-' * 60)
     
     chat = read_messages(r, from_user, to_user)
-    # notification_numer = r.smembers(f"notification:{from_user}")
-    # conut_numer = 0
-    # for noti in notification_numer:
-    #     date,to_user_to,mess = noti.split('|',2)
-    #     if to_user_to == to_user:
-    #         conut_numer =+1
+    count= notification_number(r, from_user, to_user)
     for i, msg in enumerate(chat):
-        if notification and i == len(chat) - 1:
-            print('\n' + msg + " (nuovo messaggio)")
-        else:
-            print('\n' + msg)
     
+        if notification==True and i == len(chat) - count:
+            print(f'\n{Fore.YELLOW}------------------ Hai dei nuovi messagi da {to_user} ------------------{Style.RESET_ALL} \n')
+            print('\n' + msg + " (nuovo messaggio)") 
+        else:
+            print('\n' + msg)    
     if int(r.hget(f"user:name:{to_user}", "stato")) == 1:
         print("!! IMPOSSIBILE RECAPIRTARE IL MESSAGIO, L'UTENTE HA LA MODALITA' DND ATTIVA")
     
     print('-' * 60)
-
+    
 def chat_session(r, from_user, to_user, temporary:bool):
     clear_screen()
     subscribe_message(r, from_user,to_user)
-    show_chat(r,from_user,to_user,False)    
-    
+    show_chat(r,from_user,to_user,True)    
+    delete_notification(r,from_user,to_user)
     while True: 
 
         message = send_message(r, from_user, to_user, temporary)
@@ -139,7 +142,7 @@ def chat_session(r, from_user, to_user, temporary:bool):
             break
         else:
             show_chat(r,from_user,to_user,False)
- 
+        
 
 
 def callback_notification(message):
@@ -149,18 +152,18 @@ def callback_notification(message):
     db=0,
     username='bruno',
     password='User1234?',
-    decode_responses=True,
+    decode_responses=True,  
     )
     from_user = message['channel'].split(':')[1]
     date,to_user,mess = message['data'].split('|',2)
-    r.zadd(f"notification:{from_user}", {f"{date}|{to_user}|{mess}": time.time()})
+    r.zadd(f"notification:{from_user}:{to_user}", {f"{date}|{to_user}|{mess}": time.time()})
     #print(f"{Fore.RED} < {Style.RESET_ALL} {mess} [{date}] (Nuovo messaggio)")
          
 def subscribe_message(r, from_user,to_user):
     pubsub = r.pubsub()
     pubsub.psubscribe(**{f"channel:{from_user}": callback_notification})
     pubsub.psubscribe(**{f"channel:{to_user}": callback_notification})
-    r.publish("utenti:registrazioni", from_user)
+    r.publish("utenti:notification", from_user)
     pubsub.run_in_thread(sleep_time=0.01)
 
             
