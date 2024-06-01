@@ -70,8 +70,7 @@ def select_contact_to_chat(r, user_name):
             if 1 <= chat_utente_idx <= len(contatti):
                 selected_user = contatti[chat_utente_idx - 1]
                 type_chat = input("Che tipologia di chat vuoi iniziare, normale (N) o effimera (E)?: ").strip().upper()
-                # r.sadd(f"chats:{user_name}", chat_utente_idx)
-                # r.sadd(f"chats:{chat_utente_idx}", user_name)
+
                 if type_chat == 'E':
                     clear_screen()
                     print("Chat effimera iniziata.")
@@ -141,41 +140,29 @@ def delete_notification(r, from_user,to_user):
 
 def chat_session(r, from_user, to_user, temporary:bool):
     clear_screen()
-    #subscribe_message(r, from_user,to_user)
     pubsub = r.pubsub()
     pubsub.psubscribe(**{f"{from_user}:{to_user}": callback_notification})
     pubsub.psubscribe(**{f"{to_user}:{from_user}": callback_notification})
-    message = pubsub.get_message()
-    #print(message)
-    #r.publish(f"{to_user}:{from_user}", message)
     thread = pubsub.run_in_thread(sleep_time=0.01)
     
     show_chat(r,from_user,to_user,True)    
     delete_notification(r, from_user,to_user)
     while True: 
-
         message = send_message(r, from_user, to_user, temporary)
         if message is not None:
+            delete_notification(r, from_user,to_user)
             break
         else:
             show_chat(r,from_user,to_user,False)
+            
     thread.stop()
 
 def callback_notification(message):
-    #print('MY HANDLER: ', message['data'])
-    print(message)
     to_user,from_user = message['channel'].split(':')
     date,from_user,mess = message['data'].split('|',2)
-    print('(Nuovo messaggio): ',f"{Fore.RED} < {Style.RESET_ALL} {message['data']}")
+    print(f'{Fore.RED} < {Style.RESET_ALL}',f" {mess} [{date}]")
     r.zadd(f"notification:{to_user}:{from_user}", {f"{date}|{to_user}|{mess}": time.time()})
-         
-def subscribe_message(r, from_user,to_user):
-    pubsub = r.pubsub()
-    pubsub.psubscribe(**{f"{from_user}:{to_user}": callback_notification})
-    pubsub.psubscribe(**{f"{to_user}:{from_user}": callback_notification})
-    #message = pubsub.get_message()
-    #r.publish(f"{to_user}:{from_user}", message)
-    thread = pubsub.run_in_thread(sleep_time=0.01)
+
  
 def main():
     global r
@@ -191,7 +178,7 @@ def main():
         anim(sel)
        
         try:
-            choice = int(input("Inserisci il numero dell'opzione: "))
+            choice = int(input(f"{Fore.YELLOW}Inserisci il numero dell'opzione: {Style.RESET_ALL}"))
             match choice:
                 case 1:
                     sign_up(r)  
@@ -211,6 +198,5 @@ def main():
             clear_screen()
             print('Errore hai inserito un opzione inesistente')
 
-    #r.incr(f"messages:{from_user}:{to_user}")
 if __name__ == '__main__':
     main()

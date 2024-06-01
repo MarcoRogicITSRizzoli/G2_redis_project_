@@ -16,13 +16,21 @@ def sign_up(redis):
         while True:
             password = input('Inserisci la password: ').strip()
             if password!= '':
-                password_valid = input('Conferma la password: ').strip()
-                if (password != password_valid):
-                    print('Le due password sono diverse') 
+                if password.upper() != 'ESC':
+                    password_valid = input('Conferma la password: ').strip()
+                    if password_valid.upper() != 'ESC':
+                        if (password != password_valid):
+                            print('Le due password sono diverse') 
+                        else:
+                            redis.hset(f'{hash_name}{from_user}',mapping={'from_user': from_user,'password':hash_password(password),'stato':0})
+                            clear_screen()
+                            print('Utente Registrato correttamente')
+                            break
+                    else:
+                        clear_screen()
+                        break
                 else:
-                    redis.hset(f'{hash_name}{from_user}',mapping={'from_user': from_user,'password':hash_password(password),'stato':0})
                     clear_screen()
-                    print('Utente Registrato correttamente')
                     break
             else:
                 clear_screen()
@@ -54,9 +62,6 @@ def login(redis):
         clear_screen()
         print('Dati non inseriti correttamente')
         return None
-
-def choice():
-    ...
     
 def add_friend(redis, from_user):
     global hash_name
@@ -66,7 +71,7 @@ def add_friend(redis, from_user):
 
     clear_screen()
     
-    friend_search_pattern = str(input('Inserisci il nome (o parziale) del utente da aggiungere: ').strip())
+    friend_search_pattern = str(input(f'{Fore.YELLOW}Inserisci il nome (o parziale) del utente da aggiungere: {Style.RESET_ALL}').strip())
     regex_pattern = re.compile(friend_search_pattern.replace('*', '.*'), re.IGNORECASE)
     
     matching_friends = []
@@ -82,7 +87,7 @@ def add_friend(redis, from_user):
             anim(a)
         
         try:
-            selezione = int(input('Seleziona un numero per aggiungere un amico: ').strip())
+            selezione = int(input(f'{Fore.YELLOW}Seleziona un numero per aggiungere un amico: {Style.RESET_ALL}').strip())
             if 1 <= selezione <= len(matching_friends):
                 selected_friend = matching_friends[selezione - 1]
                 if not redis.sismember(hash_key_friend, selected_friend):
@@ -91,7 +96,7 @@ def add_friend(redis, from_user):
                     print(f'Utente {selected_friend} aggiunto correttamente')
                 else:
                     clear_screen()
-                    print('Utente già presente nella lista amici')
+                    print(f'{Fore.YELLOW} Utente già presente nella lista amici {Style.RESET_ALL}')
                     raise TypeError
             else:
                 print('Selezione non valida')
@@ -106,7 +111,7 @@ def add_friend(redis, from_user):
 def remove_friend(redis, from_user):
     hash_friend = 'user:friends:'
     
-    friend_name = str(input('Inserisci il nome del utente da rimuovere: ').strip())
+    friend_name = str(input(f'{Fore.YELLOW}Inserisci il nome del utente da rimuovere: {Style.RESET_ALL} ').strip())
     hash_key_friend = hash_friend + from_user
     
     if redis.exists(hash_key_friend):

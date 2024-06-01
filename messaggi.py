@@ -20,9 +20,7 @@ def send_message(r, from_user, to_user, temporary=False):
         r.sadd(f"chats:{to_user}", from_user)
         
         r.publish(f"{to_user}:{from_user}", message_data)
-        #r.publish(f"channel:{to_user}", message_data)
-        #print(f"{Fore.RED} < {Style.RESET_ALL} {message} [{timestamp}] (Nuovo messaggio)")
-    
+       
     
     if temporary is True:
         r.expire(f"messages:{from_user}:{to_user}", 60)
