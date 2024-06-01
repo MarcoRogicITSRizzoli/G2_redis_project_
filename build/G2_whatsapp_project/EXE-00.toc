@@ -153,13 +153,21 @@
    'C:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
    'Rizzoli\\Documents\\G2_redis_project_\\build\\G2_whatsapp_project\\base_library.zip',
    'DATA'),
-  ('redis-5.0.4.dist-info\\REQUESTED',
+  ('redis-5.0.4.dist-info\\INSTALLER',
    'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
-   'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\REQUESTED',
+   'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\INSTALLER',
    'DATA'),
   ('redis-5.0.4.dist-info\\top_level.txt',
    'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
    'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\top_level.txt',
+   'DATA'),
+  ('redis-5.0.4.dist-info\\LICENSE',
+   'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
+   'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\LICENSE',
+   'DATA'),
+  ('redis-5.0.4.dist-info\\REQUESTED',
+   'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
+   'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\REQUESTED',
    'DATA'),
   ('redis-5.0.4.dist-info\\RECORD',
    'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
@@ -169,14 +177,6 @@
    'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
    'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\WHEEL',
    'DATA'),
-  ('redis-5.0.4.dist-info\\LICENSE',
-   'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
-   'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\LICENSE',
-   'DATA'),
-  ('redis-5.0.4.dist-info\\INSTALLER',
-   'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
-   'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\INSTALLER',
-   'DATA'),
   ('redis-5.0.4.dist-info\\METADATA',
    'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
    'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\redis-5.0.4.dist-info\\METADATA',
@@ -184,7 +184,7 @@
  [],
  False,
  False,
- 1717254265,
+ 1717266763,
  [('run.exe',
    'c:\\Users\\BrunoLuciano\\OneDrive - ITS Angelo '
    'Rizzoli\\Documents\\G2_redis_project_\\.venv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\run.exe',

@@ -115,13 +115,10 @@ def show_chat(r, from_user, to_user, notification: bool):
     
     chat = read_messages(r, from_user, to_user)
     notification_numer = r.zrange(f"notification:{from_user}:{to_user}", 0, -1)
-    
-    # Stampa i messaggi precedenti
-    for msg in chat[:-len(notification_numer)]:
-        print('\n' + msg)
-        
-    # Stampa la notifica e i nuovi messaggi
+
     if notification and len(notification_numer) > 0:
+        for msg in chat[:-len(notification_numer)]:
+            print('\n' + msg)
         print(f'\n----------------{Fore.YELLOW} Hai dei nuovi messaggi da {to_user} {Style.RESET_ALL}----------------\n')
         for msg in chat[-len(notification_numer):]:
             print('\n' + msg)
@@ -143,6 +140,7 @@ def chat_session(r, from_user, to_user, temporary:bool):
     pubsub = r.pubsub()
     pubsub.psubscribe(**{f"{from_user}:{to_user}": callback_notification})
     pubsub.psubscribe(**{f"{to_user}:{from_user}": callback_notification})
+    pubsub.get_message()
     thread = pubsub.run_in_thread(sleep_time=0.01)
     
     show_chat(r,from_user,to_user,True)    
