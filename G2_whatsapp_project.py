@@ -123,7 +123,7 @@ def show_chat(r, from_user, to_user, notification: bool):
         
     # Stampa la notifica e i nuovi messaggi
     if notification and len(notification_numer) > 0:
-        print(f'\n----------------{Fore.YELLOW} Hai dei nuovi messaggi da {to_user} {Style.RESET_ALL}----------------n')
+        print(f'\n----------------{Fore.YELLOW} Hai dei nuovi messaggi da {to_user} {Style.RESET_ALL}----------------\n')
         for msg in chat[-len(notification_numer):]:
             print('\n' + msg)
     else:
@@ -146,7 +146,7 @@ def chat_session(r, from_user, to_user, temporary:bool):
     pubsub.psubscribe(**{f"{from_user}:{to_user}": callback_notification})
     pubsub.psubscribe(**{f"{to_user}:{from_user}": callback_notification})
     message = pubsub.get_message()
-    print(message)
+    #print(message)
     #r.publish(f"{to_user}:{from_user}", message)
     thread = pubsub.run_in_thread(sleep_time=0.01)
     
@@ -161,20 +161,19 @@ def chat_session(r, from_user, to_user, temporary:bool):
             show_chat(r,from_user,to_user,False)
     thread.stop()
 
-
 def callback_notification(message):
-    # from_user = message['channel'].split(':')[1]
-    # date,to_user,mess = message['data'].split('|',2)
-    print('MY HANDLER: ', message['data'])
-    
-    #r.zadd(f"notification:{to_user}:{from_user}", {f"{date}|{to_user}|{mess}": time.time()})
-    #print(f"{Fore.RED} < {Style.RESET_ALL} {mess} [{date}] (Nuovo messaggio)")
+    #print('MY HANDLER: ', message['data'])
+    print(message)
+    to_user,from_user = message['channel'].split(':')
+    date,from_user,mess = message['data'].split('|',2)
+    print('(Nuovo messaggio): ',f"{Fore.RED} < {Style.RESET_ALL} {message['data']}")
+    r.zadd(f"notification:{to_user}:{from_user}", {f"{date}|{to_user}|{mess}": time.time()})
          
 def subscribe_message(r, from_user,to_user):
     pubsub = r.pubsub()
     pubsub.psubscribe(**{f"{from_user}:{to_user}": callback_notification})
     pubsub.psubscribe(**{f"{to_user}:{from_user}": callback_notification})
-    message = pubsub.get_message()
+    #message = pubsub.get_message()
     #r.publish(f"{to_user}:{from_user}", message)
     thread = pubsub.run_in_thread(sleep_time=0.01)
  
